@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Tutorial_01",
+            "name": "Tutorial_10",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/tutorial_01/build/tutorial_01",
+            "program": "${workspaceFolder}/tutorial_10/build/tutorial_10_run",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/tutorial_01/build/",
+            "cwd": "${workspaceFolder}/tutorial_10/build/",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
