@@ -1,4 +1,5 @@
 #include "Halide.h"
+#include <iostream>
 
 using namespace Halide;
 
@@ -19,11 +20,17 @@ public:
     blur_y(x, y) = (blur_x(x, y - 1), blur_x(x, y), blur_x(x, y + 1)) / 3;
     result(x, y) = cast<uint8_t>(blur_y(x, y));
 
-    clamped.compute_root();
-    input_16.compute_root();
-    blur_x.compute_root();
-    blur_y.compute_root();
-    result.compute_root();
+    // inline everything: 1.82
+    // compute root: 5.14
+    // inlined upcast and blur_y: 5.14
+
+#ifdef COMPUTE_ROOT
+    const int vec = 32;
+    Var xi, yi;
+    result.compute_root().tile(x, y, xi, yi, 256, vec).vectorize(xi, vec);
+    blur_x.compute_at(result, x).vectorize(x, vec);
+    input_16.compute_at(result, x).vectorize(x, vec);
+#endif
   }
 };
 

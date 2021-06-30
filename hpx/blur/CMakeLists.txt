@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.16)
 project(HPX_runtime)
 
 #find_package(HPX REQUIRED)
+
 find_package(Halide REQUIRED)
+
+option(USE_COMPUTE_ROOT "If compile_root is set" OFF)
+if (USE_COMPUTE_ROOT)
+	add_definitions(-DCOMPUTE_ROOT)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
