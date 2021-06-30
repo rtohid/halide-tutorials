@@ -1,40 +1,30 @@
 #include "Halide.h"
-#include "halide_image_io.h"
-#include <stdio.h>
-
-#include <hpx/hpx_main.hpp>
-#include <hpx/iostream.hpp>
-
-#include <hpx/include/parallel_for_loop.hpp>
-#include <hpx/runtime.hpp>
 
 using namespace Halide;
 
-int hpx_parallel_loop(void *ctx, int (*f)(void *, int, uint8_t *), int min,
-                      int extent, uint8_t *closure) {
-  hpx::for_loop(hpx::execution::par, min, min + extent,
-                [&](int i) { f(ctx, i, closure); });
-  return 0;
-}
+class Blur : public Generator<Blur> {
+public:
+  Input<Buffer<uint8_t>> input{"input", 2};
+  Output<Buffer<uint8_t>> result{"result", 2};
 
-int main(int argc, char **argv) {
-  Buffer<uint8_t> input = Halide::Tools::load_image("images/lsu_campus.jpg");
-  Func brighter;
-  Var x, y, c;
-  Expr value = input(x, y, c);
-  value = Halide::cast<float>(value);
-  value = value * 1.5f + value;
-  value = Halide::min(value, 255.0f);
-  value = Halide::cast<uint8_t>(value);
-  brighter(x, y, c) = value;
-  brighter.parallel(x);
-  brighter.set_custom_do_par_for(&hpx_parallel_loop);
-  hpx::chrono::high_resolution_timer t;
-  Buffer<uint8_t> output =
-      brighter.realize({input.width(), input.height(), input.channels()});
-  std::cout << "ELAPSED: " << t.elapsed() << std::endl;
-  Halide::Tools::save_image(output, "images/brighter_campus.jpg");
+  void generate() {
+    Var x, y;
+    Func clamped = BoundaryConditions::repeat_edge(input);
+    Func input_16;
+    input_16(x, y) = cast<uint16_t>(clamped(x, y));
+    Func blur_x;
+    blur_x(x, y) =
+        (input_16(x - 1, y) + input_16(x, y) + input_16(x + 1, y)) / 3;
+    Func blur_y;
+    blur_y(x, y) = (blur_x(x, y - 1), blur_x(x, y), blur_x(x, y + 1)) / 3;
+    result(x, y) = cast<uint8_t>(blur_y(x, y));
 
-  printf("Success!\n");
-  return 0;
-}
+    clamped.compute_root();
+    input_16.compute_root();
+    blur_x.compute_root();
+    blur_y.compute_root();
+    result.compute_root();
+  }
+};
+
+HALIDE_REGISTER_GENERATOR(Blur, blur);
