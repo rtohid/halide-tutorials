@@ -12,9 +12,8 @@ set(CMAKE_INSTALL_RPATH /work/rtohid/Halide/install-release/lib64/)
 
 add_executable(blurring blur_generator.cpp)
 target_link_libraries(blurring PRIVATE Halide::Generator)
-add_halide_library(blur FROM blurring)
-#add_executable(runner /work/rtohid/Halide/tools/RunGenMain.cpp blur_generator.cpp)
-#target_link_libraries(blur PRIVATE Halide::Halide Halide::ImageIO Halide::Tools Halide::RunGenMain)
-##target_link_libraries(blur PRIVATE HPX::hpx HPX::wrap_main HPX::iostreams_component Halide::Halide Halide::ImageIO Halide::Tools)
-#set_target_properties(blur PROPERTIES ENABLE_EXPORTS TRUE)
+
+add_halide_library(blur FROM blurring REGISTRATION blur_reg)
+add_executable(runner ${blur_reg})
+target_link_libraries(runner PRIVATE blur Halide::RunGenMain)
 
