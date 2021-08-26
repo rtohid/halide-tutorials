@@ -1,3 +1,5 @@
+#include <hpx/hpx_main.hpp>
+
 #include <chrono>
 #include <cstdio>
 

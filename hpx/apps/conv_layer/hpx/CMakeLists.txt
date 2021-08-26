@@ -12,8 +12,11 @@ set(CMAKE_CXX_EXTENSIONS NO)
 find_package(Halide REQUIRED)
 find_package(HPX REQUIRED)
 
-add_library(hpx_runtime hpx_runtime.cpp)
-target_link_libraries(hpx_runtime PRIVATE HPX::hpx HPX::wrap_main HPX::iostreams_component Halide::Halide)
+add_library(hpx_runtime OBJECT hpx_runtime.cpp)
+target_link_libraries(hpx_runtime PUBLIC HPX::hpx HPX::iostreams_component Halide::Halide)
+if(MSVC)
+    target_compile_definitions(hpx_runtime PUBLIC NOMINMAX)
+endif()
 
 # Generator
 add_executable(conv_layer.generator conv_layer_generator.cpp)
@@ -34,7 +37,8 @@ target_link_libraries(conv_layer_process
                       Halide::ImageIO
                       conv_layer
                       conv_layer_auto_schedule
-		      hpx_runtime)
+                      hpx_runtime
+                      HPX::wrap_main)
 
 # Test that the app actually works!
 add_test(NAME conv_layer_process COMMAND conv_layer_process)
