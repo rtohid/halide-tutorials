@@ -14,12 +14,9 @@
 using namespace Halide::Tools;
 
 int main(int argc, char **argv) {
-    if (argc != 3) {
-        printf("Usage: %s in out\n", argv[0]);
-        return 1;
-    }
 
-    Halide::Runtime::Buffer<float> input = load_and_convert_image(argv[1]);
+
+    Halide::Runtime::Buffer<float> input = load_and_convert_image("rgba.png");
 
     // The harris app doesn't use a boundary condition
     Halide::Runtime::Buffer<float> output(input.width() - 6, input.height() - 6);
@@ -37,7 +34,7 @@ int main(int argc, char **argv) {
     //});
     //printf("Auto-scheduled time: %gms\n", best_auto * 1e3);
 
-    convert_and_save_image(output, argv[2]);
+    convert_and_save_image(output, "result.png");
 
     printf("Success!\n");
     return 0;

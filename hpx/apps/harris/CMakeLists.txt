@@ -11,17 +11,20 @@ set(CMAKE_CXX_EXTENSIONS NO)
 find_package(HPX REQUIRED)
 find_package(Halide REQUIRED)
 
-add_library(hpx_runtime hpx_runtime.cpp)
-target_link_libraries(hpx_runtime PRIVATE HPX::hpx HPX::wrap_main HPX::iostreams_component Halide::Halide)
+add_library(hpx_runtime OBJECT hpx_runtime.cpp)
+target_link_libraries(hpx_runtime PUBLIC HPX::hpx HPX::wrap_main HPX::iostreams_component Halide::Halide)
+if(MSVC)
+    target_compile_definitions(hpx_runtime PUBLIC NOMINMAX)
+endif()
 
 add_executable(harris.generator harris_generator.cpp)
 target_link_libraries(harris.generator PRIVATE Halide::Generator Halide::Tools)
 
 # Filters
 add_halide_library(harris FROM harris.generator)
-#add_halide_library(harris_auto_schedule FROM harris.generator
-#                   GENERATOR harris
-#                   AUTOSCHEDULER Halide::Mullapudi2016)
+add_halide_library(harris_auto_schedule FROM harris.generator
+                  GENERATOR harris
+                  AUTOSCHEDULER Halide::Mullapudi2016)
 
 # Main executable
 add_executable(harris_filter filter.cpp)
@@ -29,7 +32,8 @@ target_link_libraries(harris_filter
                       PRIVATE
                       Halide::ImageIO
                       harris
-		      hpx_runtime)
+		              hpx_runtime
+                      )
 
 # Test that the app actually works!
 #set(IMAGE ${CMAKE_CURRENT_LIST_DIR}/../images/rgba.png)
