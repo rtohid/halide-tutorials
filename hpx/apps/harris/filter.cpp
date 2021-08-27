@@ -11,6 +11,8 @@
 #include "halide_benchmark.h"
 #include "halide_image_io.h"
 
+#include <hpx/hpx_main.hpp>
+
 using namespace Halide::Tools;
 
 int main(int argc, char **argv) {

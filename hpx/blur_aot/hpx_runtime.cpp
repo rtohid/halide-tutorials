@@ -7,7 +7,6 @@
 
 extern "C" int hpx_halide_do_par_for(void* ctx, int (*f)(void*, int, uint8_t*),
     int min, int extent, uint8_t * closure) {
-    hpx::cout << "1" << hpx::endl;
     hpx::for_loop(hpx::execution::par, min, min + extent,
         [&](int i) { f(ctx, i, closure); });
     return 0;

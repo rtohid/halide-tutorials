@@ -5,6 +5,8 @@
 #include "HalideBuffer.h"
 #include "halide_image_io.h"
 
+#include <hpx/hpx_main.hpp>
+
 #include "blur.h"
 
 using namespace Halide::Tools;
