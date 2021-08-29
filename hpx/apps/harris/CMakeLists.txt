@@ -32,8 +32,8 @@ target_link_libraries(harris_filter
                       PRIVATE
                       Halide::ImageIO
                       harris
-		              hpx_runtime
-                      )
+                      harris_auto_schedule
+                      hpx_runtime)
 
 # Test that the app actually works!
 #set(IMAGE ${CMAKE_CURRENT_LIST_DIR}/../images/rgba.png)
