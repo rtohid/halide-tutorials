@@ -5,6 +5,9 @@
 #include "HalideBuffer.h"
 #include "halide_image_io.h"
 
+
+#include <hpx/hpx_main.hpp>
+
 #include "brighten.h"
 
 using namespace Halide::Tools;
