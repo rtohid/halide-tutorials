@@ -5,6 +5,8 @@
 #include "HalideBuffer.h"
 #include "HalideRuntime.h"
 
+#include <hpx/hpx_main.hpp>
+
 #include "harris.h"
 #include "harris_auto_schedule.h"
 
