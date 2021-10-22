@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(nl_means)
 
-enable_testing()
-
 # Set up language settings
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
@@ -10,6 +8,18 @@ set(CMAKE_CXX_EXTENSIONS NO)
 
 # Find Halide
 find_package(Halide REQUIRED)
+SET(HPX_BACKEND ON CACHE BOOL "HPX backend")
+SET(HALIDE_BACKEND ON CACHE BOOL "Halide backend")
+
+if(HPX_BACKEND)
+    find_package(HPX REQUIRED)
+
+    add_library(hpx_runtime OBJECT hpx_runtime.cpp)
+    target_link_libraries(hpx_runtime PUBLIC HPX::hpx HPX::iostreams_component Halide::Halide)
+    if(MSVC)
+        target_compile_definitions(hpx_runtime PUBLIC NOMINMAX)
+    endif()
+endif()
 
 # Generator
 add_executable(nl_means.generator nl_means_generator.cpp)
@@ -22,20 +32,22 @@ add_halide_library(nl_means_auto_schedule FROM nl_means.generator
                    AUTOSCHEDULER Halide::Mullapudi2016)
 
 # Main executable
-add_executable(nl_means_process process.cpp)
-target_link_libraries(nl_means_process
+if(HPX_BACKEND)
+add_executable(nl_means_process_hpx process.cpp)
+target_compile_definitions(nl_means_process_hpx PUBLIC -DHPX_INCLUDE)
+target_link_libraries(nl_means_process_hpx
+                      PRIVATE
+                      Halide::ImageIO
+                      nl_means
+                      nl_means_auto_schedule
+		      hpx_runtime
+                      HPX::wrap_main)
+endif()
+if(HALIDE_BACKEND)
+add_executable(nl_means_process_halide process.cpp)
+target_link_libraries(nl_means_process_halide
                       PRIVATE
                       Halide::ImageIO
                       nl_means
                       nl_means_auto_schedule)
-
-# Test that the app actually works!
-set(IMAGE ${CMAKE_CURRENT_LIST_DIR}/../images/rgb.png)
-if (EXISTS ${IMAGE})
-    configure_file(${IMAGE} rgb.png COPYONLY)
-    add_test(NAME nl_means_process COMMAND nl_means_process rgb.png 7 7 0.12 10 out.png)
-    set_tests_properties(nl_means_process PROPERTIES
-                         LABELS nl_means
-                         PASS_REGULAR_EXPRESSION "Success!"
-                         SKIP_REGULAR_EXPRESSION "\\[SKIP\\]")
-endif ()
+endif()

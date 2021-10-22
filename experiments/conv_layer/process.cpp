@@ -7,6 +7,10 @@
 #include "HalideBuffer.h"
 #include "halide_benchmark.h"
 
+#ifdef HPX_INCLUDE
+#include <hpx/hpx_main.hpp>
+#endif
+
 using namespace Halide::Tools;
 using namespace Halide::Runtime;
 
@@ -56,12 +60,20 @@ int main(int argc, char **argv) {
 
     // Timing code
 
+    auto start = benchmark_now();
+
+    conv_layer(input, filter, bias, output);
+
+    auto end = benchmark_now();
+    double elapsed_seconds = benchmark_duration_seconds(start, end);
+    printf("Manually-tuned time: %gms\n", elapsed_seconds * 1e3);
+
     // Manually-tuned version
-    double min_t_manual = benchmark(10, 10, [&]() {
-        conv_layer(input, filter, bias, output);
-        output.device_sync();
-    });
-    printf("Manually-tuned time: %gms\n", min_t_manual * 1e3);
+//    double min_t_manual = benchmark(10, 10, [&]() {
+//        conv_layer(input, filter, bias, output);
+//        output.device_sync();
+//    });
+//    printf("Manually-tuned time: %gms\n", min_t_manual * 1e3);
 
     // Auto-scheduled version
 //    double min_t_auto = benchmark(10, 10, [&]() {
