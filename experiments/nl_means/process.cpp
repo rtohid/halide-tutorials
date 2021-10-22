@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 
     auto end = benchmark_now();
     double elapsed_seconds = benchmark_duration_seconds(start, end);
-    printf("Manually-tuned time: %gms\n", elapsed_seconds * 1e3);
+    printf("time: %gms\n", elapsed_seconds * 1e3);
 //    nl_means(input, patch_size, search_area, sigma, output);
 
     // Timing code

@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
     setenv("HL_CUDA_JIT_MAX_REGISTERS", "256", 1);
 #endif
 
-    conv_layer(input, filter, bias, output);
+//    conv_layer(input, filter, bias, output);
 
     // Timing code
 
@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
 
     auto end = benchmark_now();
     double elapsed_seconds = benchmark_duration_seconds(start, end);
-    printf("Manually-tuned time: %gms\n", elapsed_seconds * 1e3);
+    printf("time: %gms\n", elapsed_seconds * 1e3);
 
     // Manually-tuned version
 //    double min_t_manual = benchmark(10, 10, [&]() {
