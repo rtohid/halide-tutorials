@@ -1,0 +1,15 @@
+{
+    "cmake.buildDirectory": "${workspaceFolder}/cmake-build/${buildType}",
+    "cmake.installPrefix": "${workspaceFolder}/cmake-install/${buildType}",
+    "cmake.generator": "Ninja",
+    "cmake.buildArgs": [
+        "--parallel"
+    ],
+    "cmake.configureArgs": [
+        "-DCMAKE_PREFIX_PATH=/work/rtohid/halide_hpx/Halide/cmake-install-release/lib64/cmake/Halide;/work/rtohid/halide_hpx/Halide/cmake-install-release/lib64/cmake/HalideHelpers;/work/rtohid/hpx/cmake-install-release/lib64/cmake/HPX/"
+    ],
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "files.associations": {
+        "iostream": "cpp"
+    }
+}
