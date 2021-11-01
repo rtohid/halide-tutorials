@@ -4,7 +4,9 @@
 #include "HalideBuffer.h"
 #include "Halide.h"
 
+#ifdef HPX_INCLUDE
 #include <hpx/hpx_main.hpp>
+#endif
 
 #define N 10000000
 
@@ -20,7 +22,7 @@ int main(int argc, char** argv) {
 
     for (size_t i = 0; i < 10; i++)
     {
-        std::cout << in_buffer(i) << " " << out_buffer(i) << std::endl;
+        std::cout << in_buffer(i) << " >> " << out_buffer(i) << std::endl;
     }
 
     return 0;

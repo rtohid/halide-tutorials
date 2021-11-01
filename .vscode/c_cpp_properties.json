@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${default}",
-                "/work/rtohid/halide_hpx/Halide/cmake-install-release/include/"
+                "/work/rtohid/halide_hpx/Halide/cmake-install-release/include/",
+                "/work/rtohid/hpx/cmake-install-release/include/"
             ],
             "compilerPath": "/opt/apps/gcc/10.2.0/bin/gcc",
             "cStandard": "gnu17",
