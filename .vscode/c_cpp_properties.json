@@ -3,15 +3,15 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
-                "/home/stellar/Halide/install/include/**",
-                "/home/stellar/Halide/tools/**"
+                "${default}",
+                "/work/rtohid/halide_hpx/Halide/cmake-install-release/include/",
+                "/work/rtohid/hpx/cmake-install-release/include/"
             ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clang-11",
-            "cStandard": "c17",
-            "cppStandard": "c++14",
-            "intelliSenseMode": "linux-clang-x64"
+            "compilerPath": "/opt/apps/gcc/10.2.0/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4
