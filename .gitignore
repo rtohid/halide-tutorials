@@ -34,3 +34,4 @@
 # Directories
 build/
 cmake-*/
+__pycache__/
