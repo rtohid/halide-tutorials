@@ -19,6 +19,10 @@
 #include <random>
 #include <string>
 
+#ifdef HPX_INCLUDE
+#include <hpx/hpx_main.hpp>
+#endif
+
 template<class T>
 struct BenchmarksBase {
     typedef T Scalar;

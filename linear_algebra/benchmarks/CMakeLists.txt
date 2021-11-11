@@ -1,7 +1,20 @@
-add_executable(halide_benchmarks halide_benchmarks.cpp)
-target_compile_definitions(halide_benchmarks PRIVATE ENABLE_FTZ_DAZ)
-target_link_libraries(halide_benchmarks PRIVATE halide_blas Halide::Tools)
-set(BENCHMARK_TARGETS halide_benchmarks)
+if(HPX_BACKEND)
+    add_executable(hpx_benchmarks halide_benchmarks.cpp)
+    target_compile_definitions(hpx_benchmarks PUBLIC -DHPX_INCLUDE)
+    target_compile_definitions(hpx_benchmarks PRIVATE ENABLE_FTZ_DAZ)
+    target_link_libraries(hpx_benchmarks PRIVATE halide_blas Halide::Tools hpx_runtime HPX::wrap_main)
+    set(BENCHMARK_TARGETS hpx_benchmarks)
+endif()
+
+message(("<<<<< HPX_BACKEND: ${HPX_BACKEND} >>>>>>"))
+
+## Halide
+if(HALIDE_BACKEND)
+    add_executable(halide_benchmarks halide_benchmarks.cpp)
+    target_compile_definitions(halide_benchmarks PRIVATE ENABLE_FTZ_DAZ)
+    target_link_libraries(halide_benchmarks PRIVATE halide_blas Halide::Tools)
+    set(BENCHMARK_TARGETS halide_benchmarks)
+endif()
 
 find_package(Eigen3 QUIET)
 set(Eigen3 Eigen3::Eigen)
