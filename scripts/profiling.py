@@ -10,13 +10,13 @@ import glob
 import numpy
 import os
 import re
+import sys
 
 from matplotlib import pyplot as plt
+from pathlib import Path
 from types import FunctionType
 from typing import List
 
-current_dir = os.path.dirname(os.path.realpath(__file__))
-logs_dir = f"{current_dir}/logs/2021_07_22--12-38-14"
 
 def get_filename(full_path: str) -> str:
     return os.path.basename(full_path)
@@ -93,6 +93,12 @@ class Profiler:
 
         runtimes = [halide_runs, hpx_runs]
 
+        if not halide_runs or not hpx_runs:
+            print(f"Nothing to plot; no Halide or HPX runs:")
+            print(f"Halide runs: {halide_runs}")
+            print(f"HPX runs: {hpx_runs}")
+            return
+
         for runtime in runtimes:
             runtime_name = runtime[0].runtime
             threads = [run.num_threads for run in runtime]
@@ -107,6 +113,14 @@ class Profiler:
         plt.show()
 
 
-log_files = [LogFile(full_path) for full_path in get_logs(logs_dir)]
-profile = Profiler(log_files)
-profile.plot()
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        current_dir = sys.argv[1]
+    else:
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+
+    paths = sorted(Path(current_dir).iterdir(), key=os.path.getmtime)
+    logs_dir = paths[-1].as_posix()
+    log_files = [LogFile(full_path) for full_path in get_logs(logs_dir)]
+    profile = Profiler(log_files)
+    profile.plot()
