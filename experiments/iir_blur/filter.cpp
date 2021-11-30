@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     iir_blur(input, 0.5f, output);
     auto end = benchmark_now();
     double elapsed_seconds = benchmark_duration_seconds(start, end);
-    printf("Manually-tuned time: %gms\n", elapsed_seconds * 1e3);
+    printf("time: %gms\n", elapsed_seconds * 1e3);
 
     
 //    double best_manual = benchmark([&]() {
